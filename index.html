@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Моя онлайн-полка</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #f8f9fa;
+            padding: 25px 15px;
+            text-align: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 2.2em;
+            text-align: center;
+        }
+        .bookshelf-container {
+            width: 100%;
+            margin: 0 auto;
+        }
+        .bookshelf-row {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 25px;
+            width: 100%;
+        }
+        .book-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            padding: 20px;
+            width: 240px; /* Уменьшил ширину */
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+        }
+        .book-image {
+            width: 100%;
+            height: 280px; /* Уменьшил высоту */
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border: 1px solid #eee;
+            transition: transform 0.3s;
+        }
+        .book-card:hover .book-image {
+            transform: scale(1.02);
+        }
+        .book-title {
+            font-size: 1.15em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            min-height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.3;
+            width: 100%;
+        }
+        .book-author {
+            color: #7f8c8d;
+            font-style: italic;
+            margin-bottom: 12px;
+            font-size: 0.9em;
+            width: 100%;
+        }
+        .book-link {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 9px 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            margin: 10px 0;
+            transition: background-color 0.3s;
+            width: 100%;
+            font-size: 0.95em;
+        }
+        .book-link:hover {
+            background-color: #2980b9;
+            text-decoration: none;
+        }
+        .book-price {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #27ae60;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px dashed #eee;
+            width: 100%;
+        }
+        .stats-block {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            padding: 15px 25px;
+            margin: 30px auto;
+            display: inline-flex;
+            gap: 30px;
+            border: 1px solid #e9ecef;
+            max-width: 500px;
+        }
+        .stats-item {
+            font-size: 1.1em;
+            color: #495057;
+            font-weight: 500;
+        }
+        .stats-item span {
+            font-weight: 700;
+            color: #3498db;
+        }
+        #total-price {
+            color: #27ae60;
+        }
+        .footer-note {
+            margin-top: 40px;
+            color: #95a5a6;
+            font-size: 0.85em;
+            text-align: center;
+            padding: 15px;
+            background: #f1f2f6;
+            border-radius: 8px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Адаптивность для разных экранов */
+        @media (max-width: 1200px) {
+            .book-card {
+                width: 220px;
+            }
+            .bookshelf-row {
+                gap: 20px;
+            }
+        }
+        
+        @media (max-width: 1100px) {
+            .bookshelf-row {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .book-card {
+                width: 220px;
+                margin-bottom: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .book-card {
+                width: 100%;
+                max-width: 250px;
+            }
+            .bookshelf-row {
+                gap: 15px;
+                margin-bottom: 15px;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            .stats-block {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px 20px;
+                max-width: 300px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            body {
+                padding: 15px 10px;
+            }
+            .book-card {
+                width: 100%;
+                max-width: 280px;
+            }
+            .bookshelf-row {
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1> Моя книжная полка</h1>
+    
+    <div class="bookshelf-container" id="bookshelf-container">
+        <!-- Первая строка с 4 книгами -->
+        <div class="bookshelf-row">
+            <!-- Книга 1 -->
+            <div class="book-card">
+                <img src="https://i.pinimg.com/736x/63/b2/67/63b267a58d6fbaa835a98893c8573092.jpg" alt="Обложка книги 'Духовка Сильвии Плат(диология)'" class="book-image">
+                <div class="book-title">Духовка Сильвии Плат</div>
+                <div class="book-author">Юстис Рей</div>
+                <a href="https://www.wildberries.ru/catalog/575979616/detail.aspx" class="book-link" target="_blank">Ссылка</a>
+                <div class="book-price">764 ₽</div>
+            </div>
+            
+            <!-- Книга 2 -->
+            <div class="book-card">
+                <img src="https://i.pinimg.com/736x/c1/c6/fe/c1c6fec40ef50b0fe3e307c831e72dc6.jpg" alt="Обложка книги 'Стоунер'" class="book-image">
+                <div class="book-title">Стоунер</div>
+                <div class="book-author">Джон Эдвард Уильямс</div>
+                <a href="https://www.wildberries.ru/catalog/2291948/detail.aspx/" class="book-link" target="_blank">Ссылка</a>
+                <div class="book-price">682 ₽</div>
+            </div>
+            
+            <!-- Книга 3 -->
+            <div class="book-card">
+                <img src="https://basket-29.wbbasket.ru/vol5525/part552570/552570852/images/big/1.webp" alt="Обложка новой книги" class="book-image">
+                <div class="book-title">Желая Артемиду</div>
+                <div class="book-author">Юстис Рей</div>
+                <a href="https://www.wildberries.ru/catalog/552570852/detail.aspx?size=760035090" class="book-link" target="_blank">Ссылка</a>
+                <div class="book-price">974 ₽</div>
+            </div>
+            
+            <!-- Книга 4 -->
+            <div class="book-card">
+                <img src="https://basket-15.wbbasket.ru/vol2236/part223657/223657026/images/big/2.webp" alt="Обложка новой книги" class="book-image">
+                <div class="book-title">Три ипостаси Божества</div>
+                <div class="book-author">Джеймс Дэшнер</div>
+                <a href="https://www.wildberries.ru/catalog/223657026/detail.aspx?size=354739418" class="book-link" target="_blank">Ссылка</a>
+                <div class="book-price">445 ₽</div>
+            </div>
+        </div>
+        
+        <!-- Вторая строка (можно добавить еще книги) -->
+     
+        <div class="bookshelf-row">
+            <div class="book-card">
+                <img src="https://basket-19.wbbasket.ru/vol3108/part310827/310827297/images/big/5.webp" alt="Обложка книги" class="book-image">
+                <div class="book-title">Жутко громко и запредельно близко</div>
+                <div class="book-author">Джонатан Сафран Фоер</div>
+                <a href="https://www.wildberries.ru/catalog/310827297/detail.aspx?size=470344555" class="book-link" target="_blank">Ссылка</a>
+                <div class="book-price">1110 ₽</div>
+            </div>
+            
+            <div class="book-card">
+                <img src="https://basket-01.wbbasket.ru/vol83/part8334/8334830/images/big/1.webp" alt="Обложка книги" class="book-image">
+                <div class="book-title">Другой класс</div>
+                <div class="book-author">Джоанн Харрис</div>
+                <a href="https://www.wildberries.ru/catalog/8334830/detail.aspx?targetUrl=EX" class="book-link" target="_blank">Ссылка</a>
+                <div class="book-price">186 ₽</div>
+            </div>
+            
+            <div class="book-card">
+                <img src="https://basket-34.wbbasket.ru/vol7253/part725358/725358015/images/big/1.webp" alt="Обложка книги" class="book-image">
+                <div class="book-title">Возвращение в Брайдсхед</div>
+                <div class="book-author">Ивлин Во</div>
+                <a href="https://www.wildberries.ru/catalog/460848676/detail.aspx" class="book-link" target="_blank">Ссылка</a>
+                <div class="book-price">492 ₽</div>
+            </div>
+            
+            <div class="book-card">
+                <img src="https://basket-29.wbbasket.ru/vol5579/part557906/557906817/images/big/1.webp" alt="Обложка книги" class="book-image">
+                <div class="book-title">Девы</div>
+                <div class="book-author">Михаэлидес Алекс</div>
+                <a href="https://www.wildberries.ru/catalog/557906817/detail.aspx" class="book-link" target="_blank">Ссылка</a>
+                <div class="book-price">492 ₽</div>
+            </div>
+        </div>
+
+    </div>
+    
+    <!-- Блок статистики -->
+    <div class="stats-block">
+        <div class="stats-item">Всего книг: <span id="total-books">0</span></div>
+        <div class="stats-item">Общая стоимость: <span id="total-price">0</span> ₽</div>
+    </div>
+    
+    <div class="footer-note">
+        Чтобы добавить новую книгу, скопируйте блок с классом "book-card" и отредактируйте данные внутри него.<br>
+        Для создания новой строки добавьте новый div с классом "bookshelf-row" и поместите в него до 4 книг.
+    </div>
+
+    <script>
+        console.log("Онлайн-полка загружена!");
+        
+        // Функция для расчета статистики
+        function calculateStats() {
+            const bookCards = document.querySelectorAll('.book-card');
+            let totalBooks = 0;
+            let totalPrice = 0;
+            
+            bookCards.forEach(card => {
+                totalBooks++;
+                const priceElement = card.querySelector('.book-price');
+                if (priceElement) {
+                    const priceText = priceElement.textContent;
+                    const price = parseInt(priceText.replace(/[^\d]/g, ''));
+                    if (!isNaN(price)) {
+                        totalPrice += price;
+                    }
+                }
+            });
+            
+            document.getElementById('total-books').textContent = totalBooks;
+            document.getElementById('total-price').textContent = totalPrice.toLocaleString('ru-RU');
+        }
+        
+        // Подсветка цены при наведении
+        document.querySelectorAll('.book-price').forEach(price => {
+            price.addEventListener('mouseenter', function() {
+                this.style.color = '#2ecc71';
+                this.style.transform = 'scale(1.05)';
+            });
+            price.addEventListener('mouseleave', function() {
+                this.style.color = '#27ae60';
+                this.style.transform = 'scale(1)';
+            });
+        });
+        
+        // Автоматическое выравнивание высоты карточек в строке
+        function equalizeCardHeights() {
+            const rows = document.querySelectorAll('.bookshelf-row');
+            rows.forEach(row => {
+                const cards = row.querySelectorAll('.book-card');
+                if (cards.length > 0) {
+                    // Сбрасываем высоту
+                    cards.forEach(card => {
+                        card.style.minHeight = 'auto';
+                    });
+                    
+                    // Находим максимальную высоту
+                    let maxHeight = 0;
+                    cards.forEach(card => {
+                        const height = card.offsetHeight;
+                        if (height > maxHeight) maxHeight = height;
+                    });
+                    
+                    // Устанавливаем одинаковую высоту для всех карточек в строке
+                    cards.forEach(card => {
+                        card.style.minHeight = maxHeight + 'px';
+                    });
+                }
+            });
+        }
+        
+        // Вызываем функции после загрузки и при изменении размера окна
+        window.addEventListener('load', function() {
+            equalizeCardHeights();
+            calculateStats();
+        });
+        window.addEventListener('resize', equalizeCardHeights);
+        
+        // Также вызываем при полной загрузке DOM
+        document.addEventListener('DOMContentLoaded', calculateStats);
+    </script>
+</body>
+</html>
